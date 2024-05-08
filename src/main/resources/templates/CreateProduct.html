@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Product</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>Create New Product</h2>
+    <form id="createProductForm">
+        <label for="productName">Product Name:</label><br>
+        <input type="text" id="productName" name="productName"><br>
+
+        <label for="productPrice">Product Price:</label><br>
+        <input type="text" id="productPrice" name="productPrice"><br>
+
+        <label for="productQuantity">Product Quantity:</label><br>
+        <input type="number" id="productQuantity" name="productQuantity"><br><br>
+
+        <button type="button" onclick="submitProduct()">Submit Product</button>
+    </form>
+
+    <div id="responseMessage"></div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var baseUrl = 'http://34.126.65.178/product';
+
+        function submitProduct() {
+            var productData = {
+                name: $('#productName').val(),
+                price: $('#productPrice').val(),
+                productQuantity: $('#productQuantity').val()
+            };
+
+            $.ajax({
+                url: baseUrl + '/createProduct',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(productData),
+                success: function (response) {
+                    $('#responseMessage').html('<p>Product created successfully!</p>');
+                    console.log(response);
+                },
+                error: function () {
+                    $('#responseMessage').html('<p>Error creating product.</p>');
+                }
+            });
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>
