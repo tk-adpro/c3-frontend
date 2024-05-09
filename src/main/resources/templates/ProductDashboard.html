@@ -2,60 +2,69 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Product Management</title>
-    <button onclick="window.location.href='/notifications.html'">Go to Notifications</button>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!-- Add dropdown for sorting products -->
-<label for="sortMethod">Sort By:</label>
-<select id="sortMethod">
-    <option value="SortByName">Name</option>
-    <option value="SortByDate">Date Added</option>
-    <option value="SortByPrice">Price</option>
-</select>
-<button onclick="fetchProducts()">Sort Products</button>
-
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    var baseUrl = 'http://34.126.65.178/product';
-
-    function fetchProducts() {
-        var sortMethod = $('#sortMethod').val();
-
-        $.ajax({
-            url: baseUrl + '/getAllProducts?sort=' + sortMethod,
-            type: 'GET',
-            success: function (products) {
-                var productHtml = products.map(function(product) {
-                    return '<p>' + product.productName + ' - ' + product.productPrice + '</p>';
-                }).join('');
-                $('#products').html(productHtml);
-            }
-        });
-    }
-    /*]]>*/
-</script>
-
 </head>
-<body>
-    <h2>Products List</h2>
-    <div id="products"></div>
-    
+<body class="bg-gray-200">
+    <div class="text-center p-6">
+        <button onclick="window.location.href='/notifications.html'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Go to Notifications</button>
+        <div class="inline-block mt-6">
+            <label for="sortMethod" class="text-lg font-medium">Sort By:</label>
+            <select id="sortMethod" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" onchange="fetchProducts()">
+                <option value="">No Sort</option>
+                <option value="SortByName">Name</option>
+                <option value="SortByDate">Date Added</option>
+                <option value="SortByPrice">Price</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="products" class="flex flex-wrap justify-center"></div>
+
     <script th:inline="javascript">
         /*<![CDATA[*/
-        var baseUrl = 'http://34.126.65.178/product';
-    
+        var baseUrl = 'http://localhost:8080/product';
+
         function fetchProducts() {
+            var sortMethod = $('#sortMethod').val();
+            var token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b21lciIsImlhdCI6MTcxNTI2OTgyOSwiZXhwIjoxNzE1MzU2MjI5fQ._tED3zCVqMzaIw-6egxIZDcPhPrxPN8og10LrQh_4R4';
+            console.log('Making AJAX request to:', baseUrl + '/getAllProducts?sort=' + sortMethod);
             $.ajax({
-                url: baseUrl + '/getAllProducts',
+                url: baseUrl + '/getAllProducts?sort=' + sortMethod,
                 type: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
                 success: function (products) {
                     var productHtml = products.map(function(product) {
-                        return '<p>' + product.name + ' - <button onclick="fetchProductById(\'' + product.id + '\')">View Details</button></p>';
+                        return `<div class="max-w-sm rounded overflow-hidden shadow-lg bg-white m-4">
+                                    <div class="px-6 py-4">
+                                        <div class="font-bold text-xl mb-2">${product.productName}</div>
+                                        <p class="text-gray-700 text-base">
+                                            Price: $${product.productPrice}
+                                        </p>
+                                    </div>
+                                    <div class="px-6 py-4">
+                                        <div class="font-bold text-xl mb-2">${product.productAddedDate}</div>
+                                        <p class="text-gray-700 text-base">
+                                            Date Added: $${product.productAddedDate}
+                                        </p>
+                                    </div>
+                                    <div class="px-6 pt-4 pb-2">
+                                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="fetchProductById('${product.id}')">
+                                            View Details
+                                        </button>
+                                    </div>
+                                </div>`;
                     }).join('');
                     $('#products').html(productHtml);
+                },
+                error: function(xhr, status, error) {
+                    console.log('AJAX call failed. Status:', status, 'Error:', error);
                 }
             });
         }
-    
+
         function fetchProductById(productId) {
             $.ajax({
                 url: baseUrl + '/getProductById/' + productId,
@@ -68,11 +77,11 @@
                 }
             });
         }
-    
+
         $(document).ready(function() {
             fetchProducts();
         });
         /*]]>*/
-    </script>    
+    </script>
 </body>
 </html>
