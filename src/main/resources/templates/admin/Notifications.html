@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Notifications</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        .read {
+            color: grey;
+        }
+        .unread {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="admin/Header.html :: Header"></div>
+
+<h2 class="text-2xl font-bold text-center mt-5">Notifications</h2>
+<div id="notifications" class="mt-5"></div>
+<div th:replace="admin/Footer.html :: Footer"></div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var baseUrl = 'http://34.126.65.178/notification/admin';
+    var token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjEiLCJpYXQiOjE3MTUzMTc5NDIsImV4cCI6MTcxNTQwNDM0Mn0.Iui3R8loln3juV7b8wJgncDXuwvYvuzp2iMNB9h1enM'
+    function fetchNotifications() {
+        $.ajax({
+            url: baseUrl + '/getAllNotification',
+            type: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (notifications) {
+                if (notifications.length === 0) {
+                    $('#notifications').html('<p class="text-center">There are no notifications.</p>');
+                } else {
+                    var notificationHtml = notifications.map(function(notification) {
+                        var readClass = notification.isRead ? 'read' : 'unread';
+                        return `<div id="${notification.notificationId}" class="${readClass}">
+                                        <p>${notification.product.productName} - Quantity is zero</p>
+                                        <button onclick="markAsRead('${notification.notificationId}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Mark as Read</button>
+                                    </div>`;
+                    }).join('');
+                    $('#notifications').html(notificationHtml);
+                }
+            },
+            error: function () {
+                $('#notifications').html('<p class="text-center text-red-500">Failed to fetch notifications.</p>');
+            }
+        });
+    }
+
+    function markAsRead(notificationId) {
+        $.ajax({
+            url: baseUrl + '/updateNotification/' + notificationId,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ isRead: true }),
+            success: function () {
+                $('#' + notificationId).addClass('read').removeClass('unread');
+            },
+            error: function () {
+                alert('Failed to mark as read!');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        fetchNotifications();
+    });
+    /*]]>*/
+</script>
+</body>
+</html>
