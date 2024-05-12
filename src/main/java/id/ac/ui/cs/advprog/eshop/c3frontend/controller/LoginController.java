@@ -2,9 +2,11 @@ package id.ac.ui.cs.advprog.eshop.c3frontend.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.util.WebUtils;
 
 @Controller
@@ -18,14 +20,12 @@ public class LoginController {
 
     @GetMapping("/profile")
     public String profilePage(HttpServletRequest request){
-        Cookie tokenCookie = WebUtils.getCookie(request, "bearer");
-        if (tokenCookie != null) {
-            String token = tokenCookie.getValue();
-            // Validate the token
-            log.info(token);
-            return "profile";
-        }
-        return "redirect:/login";
+        return "profile";
+    }
+
+    @GetMapping("auth/logout")
+    public String logoutPage(HttpServletRequest request){
+        return "logout";
     }
 
 

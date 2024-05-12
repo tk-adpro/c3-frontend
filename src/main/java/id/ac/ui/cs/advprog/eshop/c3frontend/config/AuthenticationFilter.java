@@ -43,7 +43,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Cookie tokenCookie = WebUtils.getCookie(request, "bearer");
-        if (tokenCookie != null) {
+        if (tokenCookie != null && !tokenCookie.getValue().isBlank()) {
             String token = tokenCookie.getValue();
             UsernamePasswordAuthenticationToken auth = validateToken(token);
 
