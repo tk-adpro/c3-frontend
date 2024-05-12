@@ -30,6 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/**/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 ).addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(new CustomAuthEntryPoint("/login")))
                 .build();
     }
 }
