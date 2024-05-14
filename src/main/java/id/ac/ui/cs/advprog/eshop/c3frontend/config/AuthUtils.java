@@ -61,4 +61,8 @@ public class AuthUtils {
 
         throw new RuntimeException("User is not authenticated");
     }
+
+    public static synchronized boolean isAuthenticated(){
+        return !SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser");
+    }
 }

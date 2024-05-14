@@ -17,7 +17,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage(){
-        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")){
+        if (AuthUtils.isAuthenticated()){
             return "redirect:/profile";
         }
         return "login";
@@ -35,7 +35,7 @@ public class LoginController {
 
     @GetMapping("/signup")
     public String signupPage(){
-        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")){
+        if (AuthUtils.isAuthenticated()){
             return "redirect:/profile";
         }
         return "signup";
