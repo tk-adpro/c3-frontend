@@ -2,40 +2,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
+    <title>Sign Up</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERd`knLPMO" crossorigin="anonymous">
 </head>
 <body>
+<div class="container">
 <h2>Signup Form</h2>
 <form id="signupForm">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required minlength="3" maxlength="20"><br><br>
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required minlength="3" maxlength="20"><br><br>
+    </div>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required maxlength="50"><br><br>
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required minlength="6" maxlength="40"><br><br>
-
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" name="firstName" required maxlength="50"><br><br>
-
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" name="lastName" required maxlength="50"><br><br>
-
-    <label for="dob">Date of Birth (yyyy-mm-dd HH:mm:ss):</label>
-    <input type="datetime-local" id="dob" name="dob" required><br><br>
-
-    <fieldset>
-        <legend>Select Role(s):</legend>
-        <input type="checkbox" id="admin" name="role" value="ROLE_ADMIN">
-        <label for="admin">Admin</label><br>
-        <input type="checkbox" id="user" name="role" value="ROLE_CUSTOMER">
-        <label for="user">Customer</label><br>
-    </fieldset><br>
-
-    <button type="submit">Submit</button>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required maxlength="50"><br><br>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required minlength="6" maxlength="40"><br><br>
+    </div>
+    <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" required maxlength="50"><br><br>
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" required maxlength="50"><br><br>
+    </div>
+    <div class="form-group">
+        <label for="dob">Date of Birth (yyyy-mm-dd HH:mm:ss):</label>
+        <input type="datetime-local" id="dob" name="dob" required><br><br>
+    </div>
+    <div class="form-group">
+        <fieldset>
+            <legend>Select Role(s):</legend>
+            <input type="checkbox" id="admin" name="role" value="ROLE_ADMIN">
+            <label for="admin">Admin</label><br>
+            <input type="checkbox" id="user" name="role" value="ROLE_CUSTOMER">
+            <label for="user">Customer</label><br>
+        </fieldset><br>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
-
+</div>
 <div id="signupError" style="color: red;"></div>
 
 <script th:src="@{/js/signup.js}"></script>

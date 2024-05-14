@@ -16,7 +16,7 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
                 document.cookie = `bearer=${data.token};path=/`;
                 window.location.href = '/profile';
             } else {
-                document.getElementById('loginError').textContent = 'Login failed: ' + data.message;
+                document.getElementById('loginError').textContent = data.message;
             }
         }).catch(error => {
         console.error('Error:', error);
