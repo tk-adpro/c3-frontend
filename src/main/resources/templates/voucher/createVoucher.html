@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Voucher</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body class="bg-gray-200 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
+        <h2 class="text-2xl font-bold mb-6 text-center">Create New Voucher</h2>
+        <form id="createVoucherForm" class="space-y-4">
+            <div>
+                <label for="voucherName" class="block text-sm font-medium text-gray-700">Voucher Name:</label>
+                <input type="text" id="voucherName" name="voucherName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+
+            <div>
+                <label for="voucherDescription" class="block text-sm font-medium text-gray-700">Voucher Description:</label>
+                <textarea id="voucherDescription" name="voucherDescription" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required></textarea>
+            </div>
+
+            <div>
+                <label for="voucherStartDate" class="block text-sm font-medium text-gray-700">Voucher Start Date:</label>
+                <input type="datetime-local" id="voucherStartDate" name="voucherStartDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+
+            <div>
+                <label for="voucherEndDate" class="block text-sm font-medium text-gray-700">Voucher End Date:</label>
+                <input type="datetime-local" id="voucherEndDate" name="voucherEndDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+
+            <div>
+                <label for="voucherDiscount" class="block text-sm font-medium text-gray-700">Voucher Discount (%):</label>
+                <input type="number" id="voucherDiscount" name="voucherDiscount" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+
+            <div>
+                <label for="voucherUsageLimit" class="block text-sm font-medium text-gray-700">Voucher Usage Limit:</label>
+                <input type="number" id="voucherUsageLimit" name="voucherUsageLimit" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+            </div>
+
+            <div class="text-center">
+                <button type="button" onclick="submitVoucher()" class="w-full bg-indigo-600 text-white py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit Voucher</button>
+            </div>
+        </form>
+
+        <div id="responseMessage" class="mt-4 text-center"></div>
+    </div>
+
+<script th:inline="javascript">
+    const endpointUrl = 'http://localhost:8080';
+
+    function generateUUID() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        );
+    }
+
+    function submitVoucher() {
+        var voucherData = {
+            voucherId: generateUUID(),
+            voucherName: $('#voucherName').val(),
+            voucherDescription: $('#voucherDescription').val(),
+            voucherStartDate: $('#voucherStartDate').val(),
+            voucherEndDate: $('#voucherEndDate').val(),
+            voucherDiscount: $('#voucherDiscount').val(),
+            voucherUsageLimit: $('#voucherUsageLimit').val()
+        };
+
+        $.ajax({
+            url: endpointUrl + '/voucher-api/create',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(voucherData),
+            success: function (response) {
+                window.location.href = '/vouchers?message=Voucher created successfully!';
+                console.log(response);
+            },
+            error: function () {
+                $('#responseMessage').html('<p class="text-red-600">Error creating voucher.</p>');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
