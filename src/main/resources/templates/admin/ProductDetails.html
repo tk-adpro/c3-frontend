@@ -15,7 +15,22 @@
 </div>
 <div th:replace="admin/Footer.html :: Footer"></div>
 <script>
-    var token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b21lciIsImlhdCI6MTcxNTI2OTgyOSwiZXhwIjoxNzE1MzU2MjI5fQ._tED3zCVqMzaIw-6egxIZDcPhPrxPN8og10LrQh_4R4';
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+    var token = getCookie('bearer')
 
     $(document).ready(function() {
         var productId = window.location.pathname.split('/').pop();
@@ -24,7 +39,7 @@
 
     function fetchProductDetails(productId, token) {
         $.ajax({
-            url: `http://34.126.65.178/product/getProductById/${productId}`,
+            url: `http://34.126.65.178/product/public/getProductById/${productId}`,
             type: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token

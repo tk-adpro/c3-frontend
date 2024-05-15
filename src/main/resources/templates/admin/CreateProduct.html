@@ -25,7 +25,23 @@
     <div th:replace="admin/Footer.html :: Footer"></div>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        var baseUrl = 'http://34.126.65.178/product';
+        var baseUrl = 'http://34.126.65.178/product/admin';
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        var token = getCookie('bearer')
 
         function submitProduct() {
             var productData = {
@@ -37,6 +53,9 @@
             $.ajax({
                 url: baseUrl + '/createProduct',
                 type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
                 contentType: 'application/json',
                 data: JSON.stringify(productData),
                 success: function (response) {

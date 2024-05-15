@@ -20,7 +20,6 @@ configurations {
 repositories {
     mavenCentral()
 }
-
 val junitJupiterVersion = "5.9.1"
 
 dependencies {
@@ -38,6 +37,9 @@ dependencies {
 
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
+
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
 

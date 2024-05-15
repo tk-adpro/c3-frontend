@@ -24,12 +24,26 @@
     <div th:replace="admin/Footer.html :: Footer"></div>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        var baseUrl = 'http://34.126.65.178/product';
+        var baseUrl = 'http://34.126.65.178/product/public';
         // Change this if cookie already setup
-        var token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b21lciIsImlhdCI6MTcxNTI2OTgyOSwiZXhwIjoxNzE1MzU2MjI5fQ._tED3zCVqMzaIw-6egxIZDcPhPrxPN8og10LrQh_4R4';
-
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
         function fetchProducts() {
             var sortMethod = $('#sortMethod').val();
+            var token = getCookie('bearer')
             $.ajax({
                 url: baseUrl + '/getAllProducts?sort=' + sortMethod,
                 type: 'GET',
