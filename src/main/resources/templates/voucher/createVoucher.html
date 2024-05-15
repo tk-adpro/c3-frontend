@@ -6,46 +6,59 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body class="bg-gray-200 flex items-center justify-center min-h-screen">
-    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
-        <h2 class="text-2xl font-bold mb-6 text-center">Create New Voucher</h2>
-        <form id="createVoucherForm" class="space-y-4">
-            <div>
-                <label for="voucherName" class="block text-sm font-medium text-gray-700">Voucher Name:</label>
-                <input type="text" id="voucherName" name="voucherName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
-            </div>
+<div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
+    <h2 class="text-2xl font-bold mb-6 text-center">Create New Voucher</h2>
+    <form id="createVoucherForm" class="space-y-4" onsubmit="submitVoucher(event)">
 
-            <div>
-                <label for="voucherDescription" class="block text-sm font-medium text-gray-700">Voucher Description:</label>
-                <textarea id="voucherDescription" name="voucherDescription" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required></textarea>
-            </div>
+        <div>
+            <label for="voucherName" class="block text-sm font-medium text-gray-700">Voucher Name:</label>
+            <input type="text" id="voucherName" name="voucherName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+        </div>
 
+        <div>
+            <label for="voucherDescription" class="block text-sm font-medium text-gray-700">Voucher Description:</label>
+            <textarea id="voucherDescription" name="voucherDescription" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required></textarea>
+        </div>
+
+        <div>
+            <label for="voucherDiscount" class="block text-sm font-medium text-gray-700">Voucher Discount (%):</label>
+            <input type="number" id="voucherDiscount" name="voucherDiscount" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+        </div>
+
+        <div>
+            <label for="voucherType" class="block text-sm font-medium text-gray-700">Voucher Type:</label>
+            <select id="voucherType" name="voucherType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+                <option value="">Select Voucher Expiration Type</option>
+                <option value="Expired Date">Voucher with Expired Date</option>
+                <option value="Usage Limit">Voucher with Usage Limit</option>
+                <option value="Expired Date and Usage Limit">Voucher with Expired Date and Usage Limit</option>
+            </select>
+        </div>
+
+        <div id="dateFields" class="hidden">
             <div>
                 <label for="voucherStartDate" class="block text-sm font-medium text-gray-700">Voucher Start Date:</label>
-                <input type="datetime-local" id="voucherStartDate" name="voucherStartDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+                <input type="datetime-local" id="voucherStartDate" name="voucherStartDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
                 <label for="voucherEndDate" class="block text-sm font-medium text-gray-700">Voucher End Date:</label>
-                <input type="datetime-local" id="voucherEndDate" name="voucherEndDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
+                <input type="datetime-local" id="voucherEndDate" name="voucherEndDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
             </div>
+        </div>
 
-            <div>
-                <label for="voucherDiscount" class="block text-sm font-medium text-gray-700">Voucher Discount (%):</label>
-                <input type="number" id="voucherDiscount" name="voucherDiscount" min="0" max="100" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
-            </div>
+        <div id="limitFields" class="hidden">
+            <label for="voucherUsageLimit" class="block text-sm font-medium text-gray-700">Voucher Usage Limit:</label>
+            <input type="number" id="voucherUsageLimit" name="voucherUsageLimit" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
 
-            <div>
-                <label for="voucherUsageLimit" class="block text-sm font-medium text-gray-700">Voucher Usage Limit:</label>
-                <input type="number" id="voucherUsageLimit" name="voucherUsageLimit" min="1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required>
-            </div>
+        <div class="text-center">
+            <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit Voucher</button>
+        </div>
+    </form>
 
-            <div class="text-center">
-                <button type="button" onclick="submitVoucher()" class="w-full bg-indigo-600 text-white py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Submit Voucher</button>
-            </div>
-        </form>
-
-        <div id="responseMessage" class="mt-4 text-center"></div>
-    </div>
+    <div id="responseMessage" class="mt-4 text-center"></div>
+</div>
 
 <script th:inline="javascript">
     const endpointUrl = 'http://34.124.139.225';
@@ -56,16 +69,26 @@
         );
     }
 
-    function submitVoucher() {
+    function submitVoucher(event) {
+
+        event.preventDefault();
+
         var voucherData = {
             voucherId: generateUUID(),
             voucherName: $('#voucherName').val(),
             voucherDescription: $('#voucherDescription').val(),
-            voucherStartDate: $('#voucherStartDate').val(),
-            voucherEndDate: $('#voucherEndDate').val(),
             voucherDiscount: $('#voucherDiscount').val(),
-            voucherUsageLimit: $('#voucherUsageLimit').val()
+            voucherType: $('#voucherType').val()
         };
+
+        if ($('#voucherType').val() === "Expired Date" || $('#voucherType').val() === "Expired Date and Usage Limit") {
+            voucherData.voucherStartDate = $('#voucherStartDate').val();
+            voucherData.voucherEndDate = $('#voucherEndDate').val();
+        }
+
+        if ($('#voucherType').val() === "Usage Limit" || $('#voucherType').val() === "Expired Date and Usage Limit") {
+            voucherData.voucherUsageLimit = $('#voucherUsageLimit').val();
+        }
 
         $.ajax({
             url: endpointUrl + '/voucher-api/create',
@@ -81,6 +104,54 @@
             }
         });
     }
+
+    $(document).ready(function() {
+        $('#voucherType').change(function() {
+            var selectedType = $(this).val();
+
+
+            if (selectedType === 'Expired Date and Usage Limit') {
+                $('#dateFields').removeClass('hidden');
+                $('#limitFields').removeClass('hidden');
+                $('#voucherStartDate').prop('required', true);
+                $('#voucherEndDate').prop('required', true);
+                $('#voucherUsageLimit').prop('required', true);
+            }
+
+            else if (selectedType === 'Usage Limit') {
+                $('#dateFields').addClass('hidden');
+                $('#limitFields').removeClass('hidden');
+                $('#voucherUsageLimit').prop('required', true);
+
+                // Disable required props for the hidden input
+                $('#voucherStartDate').prop('required', false).val("");
+                $('#voucherEndDate').prop('required', false).val("");
+
+            }
+
+            else if (selectedType === 'Expired Date') {
+                $('#dateFields').removeClass('hidden');
+                $('#limitFields').addClass('hidden');
+                $('#voucherStartDate').prop('required', true);
+                $('#voucherEndDate').prop('required', true);
+
+                // Disable required props for the hidden input
+                $('#voucherUsageLimit').prop('required', false).val($(this)[0].defaultValue);
+
+            }
+
+            else {
+                $('#dateFields').addClass('hidden');
+                $('#limitFields').addClass('hidden');
+
+                // Disable required props for the hidden input
+                $('#voucherStartDate').prop('required', false).val("");
+                $('#voucherEndDate').prop('required', false).val("");
+                $('#voucherUsageLimit').prop('required', false).val($(this)[0].defaultValue);
+            }
+        });
+    });
+
 </script>
 
 </body>
