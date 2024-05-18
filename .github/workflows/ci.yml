@@ -51,11 +51,11 @@ jobs:
         run: |
           ./gradlew assemble
 
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: jar
-          path: build/libs/*.jar
+      # - name: Archive artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: jar
+      #     path: build/libs/*.jar
 
   publish:
     name: Publish
