@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body class="bg-gray-100">
+<div th:replace="admin/Header.html :: Header"></div>
+
+<div class="max-w-4xl mx-auto py-10">
+    <div id="productDetail" class="bg-white rounded-lg shadow overflow-hidden">
+        <!-- Product Details will be inserted here -->
+    </div>
+</div>
+<div th:replace="admin/Footer.html :: Footer"></div>
+<script>
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+    var token = getCookie('bearer')
+
+    $(document).ready(function() {
+        var productId = window.location.pathname.split('/').pop();
+        fetchProductDetails(productId, token);
+    });
+
+    function fetchProductDetails(productId, token) {
+        $.ajax({
+            url: `http://34.126.65.178/product/public/getProductById/${productId}`,
+            type: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(product) {
+                const formattedDate = new Date(product.productAddedDate).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+                $('#productDetail').html(`
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4">
+                                <img class="w-40 h-40 object-cover" src="${product.productImage}" alt="${product.productName}">
+                                <div class="flex-1">
+                                    <h2 class="text-xl font-bold">${product.productName}</h2>
+                                    <p class="text-gray-500">${product.productDescription}</p>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <h3 class="text-lg font-semibold">Details</h3>
+                                <p>Price: $${product.productPrice.toFixed(2)}</p>
+                                <p>Discount: ${product.productDiscount}%</p>
+                                <p>Quantity Available: ${product.productQuantity}</p>
+                                <p>Added on: ${formattedDate}</p>
+                                <button onclick="redirectToEditProduct('${productId}')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-2">Edit</button>
+                                <button onclick="deleteProduct('${productId}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-2">Delete</button>
+                            </div>
+                        </div>
+                    `);
+            },
+            error: function() {
+                $('#productDetail').html('<p class="text-center text-red-500">Product not found.</p>');
+            }
+        });
+    }
+
+    function deleteProduct(productId) {
+        if (confirm('Are you sure you want to delete this product?')) {
+            $.ajax({
+                url: `http://localhost:8080/product/admin/deleteProduct/${productId}`,
+                type: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function() {
+                    alert('Product deleted successfully!');
+                    window.location.href = '/products'; // Redirect to product list
+                },
+                error: function(xhr, status, error) {
+                    alert('Failed to delete product. Error: ' + xhr.responseText);
+                }
+            });
+        }
+    }
+</script>
+</body>
+</html>

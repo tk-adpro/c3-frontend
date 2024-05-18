@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Notifications</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body class="bg-gray-100">
+<div th:replace="admin/Header.html :: Header"></div>
+
+<h2 class="text-2xl font-bold text-center mt-5">Notifications</h2>
+<div id="notifications" class="mt-5 mx-auto max-w-lg w-full"></div>
+<div th:replace="admin/Footer.html :: Footer"></div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var baseUrl = 'http://34.126.65.178/notification/admin';
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+    var token = getCookie('bearer')
+
+    function fetchNotifications() {
+        $.ajax({
+            url: baseUrl + '/getAllNotification',
+            type: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (notifications) {
+                if (notifications.length === 0) {
+                    $('#notifications').html('<p class="text-center">There are no notifications.</p>');
+                } else {
+                    var notificationHtml = notifications.map(function(notification) {
+                        var bgColor = notification.isRead ? 'bg-gray-200' : 'bg-blue-100';
+                        return `<div id="${notification.notificationId}" class="${bgColor} rounded overflow-hidden shadow-lg m-4 p-4">
+                                    <p class="${notification.isRead ? 'text-gray-600' : 'text-black'}">${notification.product.productName} - Quantity is zero</p>
+                                    <button onclick="markAsRead('${notification.notificationId}')" class="mt-4 inline-flex items-center justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                        <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-4-2v8m-4 4V4m8 16v-8"></path></svg>
+                                        Mark as Read
+                                    </button>
+                                </div>`;
+                    }).join('');
+                    $('#notifications').html(notificationHtml);
+                }
+            },
+            error: function () {
+                $('#notifications').html('<p class="text-center text-red-500">Failed to fetch notifications.</p>');
+            }
+        });
+    }
+
+    function markAsRead(notificationId) {
+        $.ajax({
+            url: baseUrl + '/updateNotification/' + notificationId,
+            type: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            contentType: 'application/json',
+            data: JSON.stringify({ isRead: true }),
+            success: function () {
+                $('#' + notificationId).removeClass('bg-blue-100').addClass('bg-gray-200');
+            },
+            error: function () {
+                alert('Failed to mark as read!');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        fetchNotifications();
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

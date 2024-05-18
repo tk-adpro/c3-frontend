@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Product</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div th:replace="admin/Header.html :: Header"></div>
+
+    <h2>Create New Product</h2>
+    <form id="createProductForm">
+        <label for="productName">Product Name:</label><br>
+        <input type="text" id="productName" name="productName"><br>
+
+        <label for="productPrice">Product Price:</label><br>
+        <input type="text" id="productPrice" name="productPrice"><br>
+
+        <label for="productQuantity">Product Quantity:</label><br>
+        <input type="number" id="productQuantity" name="productQuantity"><br><br>
+
+        <button type="button" onclick="submitProduct()">Submit Product</button>
+    </form>
+
+    <div id="responseMessage"></div>
+    <div th:replace="admin/Footer.html :: Footer"></div>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var baseUrl = 'http://34.126.65.178/product/admin';
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        var token = getCookie('bearer')
+
+        function submitProduct() {
+            var productData = {
+                name: $('#productName').val(),
+                price: $('#productPrice').val(),
+                productQuantity: $('#productQuantity').val()
+            };
+
+            $.ajax({
+                url: baseUrl + '/createProduct',
+                type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                contentType: 'application/json',
+                data: JSON.stringify(productData),
+                success: function (response) {
+                    $('#responseMessage').html('<p>Product created successfully!</p>');
+                    console.log(response);
+                },
+                error: function () {
+                    $('#responseMessage').html('<p>Error creating product.</p>');
+                }
+            });
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>

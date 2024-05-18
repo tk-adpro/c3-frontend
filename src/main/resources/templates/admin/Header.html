@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:fragment="header">
+    <header class="bg-gray-800 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-semibold"><a href="/" class="hover:text-gray-300">Welcome to Website</a></h1>
+            <nav>
+                <a href="/" class="text-white px-3 py-2 rounded hover:bg-gray-700 hover:text-white">Home</a>
+                <a href="/about" class="text-white px-3 py-2 rounded hover:bg-gray-700 hover:text-white">About</a>
+                <a href="/contact" class="text-white px-3 py-2 rounded hover:bg-gray-700 hover:text-white">Contact</a>
+            </nav>
+        </div>
+    </header>
+</div>
+</body>
+</html>
