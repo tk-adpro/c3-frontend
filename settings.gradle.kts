@@ -1,1 +1,1 @@
-rootProject.name = "c3-frontend"
+rootProject.name = "c3frontend"
