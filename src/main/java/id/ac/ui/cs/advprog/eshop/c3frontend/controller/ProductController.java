@@ -24,4 +24,9 @@ public class ProductController {
     public String viewDetails(@PathVariable("productId") String productId) {
         return "admin/ProductDetails";
     }
+
+    @GetMapping("/editProduct/{productId}")
+    public String updateProduct(@PathVariable("productId") String productId) {
+        return "admin/EditProduct";
+    }
 }

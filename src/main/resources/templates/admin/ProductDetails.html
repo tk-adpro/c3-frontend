@@ -10,7 +10,7 @@
 
 <div class="max-w-4xl mx-auto py-10">
     <div id="productDetail" class="bg-white rounded-lg shadow overflow-hidden">
-
+        <!-- Product Details will be inserted here -->
     </div>
 </div>
 <div th:replace="admin/Footer.html :: Footer"></div>
@@ -63,6 +63,8 @@
                                 <p>Discount: ${product.productDiscount}%</p>
                                 <p>Quantity Available: ${product.productQuantity}</p>
                                 <p>Added on: ${formattedDate}</p>
+                                <button onclick="redirectToEditProduct('${productId}')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded m-2">Edit</button>
+                                <button onclick="deleteProduct('${productId}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-2">Delete</button>
                             </div>
                         </div>
                     `);
@@ -71,6 +73,25 @@
                 $('#productDetail').html('<p class="text-center text-red-500">Product not found.</p>');
             }
         });
+    }
+
+    function deleteProduct(productId) {
+        if (confirm('Are you sure you want to delete this product?')) {
+            $.ajax({
+                url: `http://localhost:8080/product/admin/deleteProduct/${productId}`,
+                type: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function() {
+                    alert('Product deleted successfully!');
+                    window.location.href = '/products'; // Redirect to product list
+                },
+                error: function(xhr, status, error) {
+                    alert('Failed to delete product. Error: ' + xhr.responseText);
+                }
+            });
+        }
     }
 </script>
 </body>

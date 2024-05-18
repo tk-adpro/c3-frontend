@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body class="bg-gray-200">
+    <div th:replace="admin/Header.html :: Header"></div>
+    <div class="container mx-auto p-8">
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+            <div class="md:flex">
+                <div class="p-8">
+                    <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Update Product</div>
+                    <form id="updateProductForm" class="mt-4">
+                        <label for="productName" class="block mt-2">Product Name:</label>
+                        <input type="text" id="productName" name="productName" class="rounded p-2 w-full" required>
+
+                        <label for="productPrice" class="block mt-2">Price:</label>
+                        <input type="number" id="productPrice" name="productPrice" class="rounded p-2 w-full" required>
+                        
+                        <label for="productAmount" class="block mt-2">Amount:</label>
+                        <input type="number" id="productPrice" name="productPrice" class="rounded p-2 w-full" required>
+
+                        <label for="productDescription" class="block mt-2">Description:</label>
+                        <textarea id="productDescription" name="productDescription" class="rounded p-2 w-full" required></textarea>
+
+                        <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Update Product
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="admin/Footer.html :: Footer"></div>
+    <script>
+        document.getElementById('updateProductForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var productId = $('#productId').val();
+            var productData = {
+                productName: $('#productName').val(),
+                productPrice: $('#productPrice').val(),
+                productDescription: $('#productDescription').val(),
+                productAmount: $('#productAmount').val()
+            };
+            var token = getCookie('bearer'); // Gunakan fungsi untuk mengambil token dari cookie
+            $.ajax({
+                url: 'http://localhost:8080/product/admin/updateProduct/' + productId, // Sesuaikan port dan URL jika perlu
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(productData),
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                success: function(response) {
+                    alert('Product updated successfully!');
+                },
+                error: function() {
+                    alert('Error updating product.');
+                }
+            });
+        });
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+    </script>
+</body>
+</html>
