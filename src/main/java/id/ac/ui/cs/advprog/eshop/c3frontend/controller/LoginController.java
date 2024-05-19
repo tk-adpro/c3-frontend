@@ -5,6 +5,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +19,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage(){
-        if (AuthUtils.isAuthenticated()){
+        if (AuthUtils.isAuthenticated()) {
             return "redirect:/profile";
         }
         return "login";
@@ -25,6 +27,11 @@ public class LoginController {
 
     @GetMapping("/profile")
     public String profilePage(){
+        boolean isAdmin = AuthUtils.getRoles().contains("ROLE_ADMIN");
+        log.info(AuthUtils.getRoles());
+        if (isAdmin) {
+            return "redirect:/products";
+        }
         return "profile";
     }
 
