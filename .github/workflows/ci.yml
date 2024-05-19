@@ -17,7 +17,7 @@ env:
 on:
   push:
     branches:
-      - staging
+      - main
 
 jobs:
   build:
