@@ -14,6 +14,7 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var baseUrl = 'http://34.126.65.178/notification/admin';
+
     function getCookie(cname) {
         let name = cname + "=";
         let decodedCookie = decodeURIComponent(document.cookie);
@@ -45,7 +46,7 @@
                     var notificationHtml = notifications.map(function(notification) {
                         var bgColor = notification.isRead ? 'bg-gray-200' : 'bg-blue-100';
                         return `<div id="${notification.notificationId}" class="${bgColor} rounded overflow-hidden shadow-lg m-4 p-4">
-                                    <p class="${notification.isRead ? 'text-gray-600' : 'text-black'}">${notification.product.productName} - Quantity is zero</p>
+                                    <p class="${notification.isRead ? 'text-gray-600' : 'text-black'}"> Product with id ${notification.productId} has zero quantity</p>
                                     <button onclick="markAsRead('${notification.notificationId}')" class="mt-4 inline-flex items-center justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                         <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-4-2v8m-4 4V4m8 16v-8"></path></svg>
                                         Mark as Read
