@@ -10,6 +10,7 @@
 
     <div class="text-center p-6">
         <button onclick="window.location.href='/notifications'" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Go to Notifications</button>
+        <button onclick="window.location.href='/createProduct'" class="bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Product</button>
         <div class="inline-block mt-6">
             <label for="sortMethod" class="text-lg font-medium">Sort By:</label>
             <select id="sortMethod" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5" onchange="fetchProducts()">
@@ -56,8 +57,9 @@
                         const formattedDate = new Date(product.productAddedDate).toLocaleDateString('en-US', {
                             year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
                         });
+                        var randomColor = Math.floor(Math.random()*16777215).toString(16);
                         return `<div class="max-w-sm rounded overflow-hidden shadow-lg bg-white m-4">
-                                    <img class="w-40 h-40 object-cover" src="${product.productImage}" alt="${product.productName}">
+                                     <div class="w-82 h-40" style="background-color: #${randomColor};"></div>
                                     <div class="px-6 py-4">
                                         <div class="font-bold text-xl mb-2">${product.productName}</div>
                                         <p class="text-gray-700 text-base">

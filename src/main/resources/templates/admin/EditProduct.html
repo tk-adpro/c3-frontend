@@ -7,77 +7,124 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body class="bg-gray-200">
-    <div th:replace="admin/Header.html :: Header"></div>
-    <div class="container mx-auto p-8">
-        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
-            <div class="md:flex">
-                <div class="p-8">
-                    <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Update Product</div>
-                    <form id="updateProductForm" class="mt-4">
-                        <label for="productName" class="block mt-2">Product Name:</label>
-                        <input type="text" id="productName" name="productName" class="rounded p-2 w-full" required>
+<div th:replace="admin/Header.html :: Header"></div>
+<div class="container mx-auto p-8">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+        <div class="md:flex">
+            <div class="p-8">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Update Product</div>
+                <form id="updateProductForm" class="mt-4">
+                    <input type="hidden" id="productId" name="productId">
+                    <input type="hidden" id="productAddedDate" name="productAddedDate">
+                    <input type="hidden" id="productImage" name="productImage">
 
-                        <label for="productPrice" class="block mt-2">Price:</label>
-                        <input type="number" id="productPrice" name="productPrice" class="rounded p-2 w-full" required>
-                        
-                        <label for="productAmount" class="block mt-2">Amount:</label>
-                        <input type="number" id="productPrice" name="productPrice" class="rounded p-2 w-full" required>
+                    <label for="productName" class="block mt-2">Product Name:</label>
+                    <input type="text" id="productName" name="productName" class="rounded p-2 w-full" required>
 
-                        <label for="productDescription" class="block mt-2">Description:</label>
-                        <textarea id="productDescription" name="productDescription" class="rounded p-2 w-full" required></textarea>
+                    <label for="productPrice" class="block mt-2">Price:</label>
+                    <input type="number" id="productPrice" name="productPrice" class="rounded p-2 w-full" required>
 
-                        <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Update Product
-                        </button>
-                    </form>
-                </div>
+                    <label for="productAmount" class="block mt-2">Amount:</label>
+                    <input type="number" id="productAmount" name="productAmount" class="rounded p-2 w-full" required>
+
+                    <label for="productDiscount" class="block mt-2">Discount:</label>
+                    <input type="number" id="productDiscount" name="productDiscount" class="rounded p-2 w-full" required>
+
+                    <label for="productDescription" class="block mt-2">Description:</label>
+                    <textarea id="productDescription" name="productDescription" class="rounded p-2 w-full" required></textarea>
+
+                    <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Update Product
+                    </button>
+                </form>
             </div>
         </div>
     </div>
-    <div th:replace="admin/Footer.html :: Footer"></div>
-    <script>
-        document.getElementById('updateProductForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            var productId = $('#productId').val();
-            var productData = {
-                productName: $('#productName').val(),
-                productPrice: $('#productPrice').val(),
-                productDescription: $('#productDescription').val(),
-                productAmount: $('#productAmount').val()
-            };
-            var token = getCookie('bearer'); // Gunakan fungsi untuk mengambil token dari cookie
-            $.ajax({
-                url: 'http://localhost:8080/product/admin/updateProduct/' + productId, // Sesuaikan port dan URL jika perlu
-                type: 'PUT',
-                contentType: 'application/json',
-                data: JSON.stringify(productData),
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                success: function(response) {
-                    alert('Product updated successfully!');
-                },
-                error: function() {
-                    alert('Error updating product.');
-                }
-            });
-        });
+</div>
+<div th:replace="admin/Footer.html :: Footer"></div>
+<script>
+    $(document).ready(function() {
+        var pathArray = window.location.pathname.split('/');
+        var productId = pathArray[pathArray.length - 1];
+        console.log("Retrieved productId from URL path:", productId);
 
-        function getCookie(cname) {
-            let name = cname + "=";
-            let decodedCookie = decodeURIComponent(document.cookie);
-            let ca = decodedCookie.split(';');
-            for(let i = 0; i <ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
+        if (productId) {
+            loadProductData(productId);
+        } else {
+            console.error("No productId found in URL path");
         }
-    </script>
+    });
+    var productId;
+    var productAddedDate;
+    var productImage;
+    function loadProductData(productId) {
+        $.ajax({
+            url: `http://34.126.65.178/product/public/getProductById/${productId}`,
+            type: 'GET',
+            success: function(response) {
+                $('#productId').val(response.productId);
+                $('#productDiscount').val(response.productDiscount);
+                $('#productImage').val(response.productImage);
+                $('#productAddedDate').val(response.productAddedDate);
+                $('#productName').val(response.productName);
+                $('#productPrice').val(response.productPrice);
+                $('#productAmount').val(response.productQuantity);
+                $('#productDescription').val(response.productDescription);
+            },
+            error: function() {
+                alert('Error loading product data.');
+            }
+        });
+    }
+
+    document.getElementById('updateProductForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var productId =  $('#productId').val();
+        var updatedProductData = {
+            productId : productId,
+            productDiscount : $('#productDiscount').val(),
+            productImage : $('#productImage').val(),
+            productAddedDate :$('#productAddedDate').val(),
+            productName : $('#productName').val(),
+            productPrice : $('#productPrice').val(),
+            productQuantity : $('#productAmount').val(),
+            productDescription: $('#productDescription').val(),
+        };
+
+        var token = getCookie('bearer');
+        $.ajax({
+            url: `http://34.126.65.178/product/admin/updateProduct/${productId}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(updatedProductData),
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                alert('Product updated successfully!');
+                window.location.href='/products';
+            },
+            error: function() {
+                alert('Error updating product.');
+            }
+        });
+    });
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+</script>
 </body>
 </html>
