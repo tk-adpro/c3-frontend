@@ -104,7 +104,7 @@ jobs:
 
       - name: Deploy to GCP
         run: |
-          scp -o StrictHostKeyChecking=no -i ssh-key.pem -r ./docker-compose.yml ./monitoring ${{ secrets.GCP_USERNAME }}@${{ secrets.GCP_STATIC_IP }}:~/
+          scp -o StrictHostKeyChecking=no -i ssh-key.pem -r ${{ secrets.GCP_USERNAME }}@${{ secrets.GCP_STATIC_IP }}:~/
           ssh -o StrictHostKeyChecking=no -i ssh-key.pem ${{ secrets.GCP_USERNAME }}@${{ secrets.GCP_STATIC_IP }} "
             echo 'Updating deployment...' &&
             kubectl set image deployments/c3-frontend c3-frontend=docker.io/${{ secrets.REGISTRY_USER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}  || true && 
