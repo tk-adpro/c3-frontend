@@ -101,19 +101,12 @@ jobs:
 
       - name: update permission
         run: chmod 400 ssh-key.pem
-    
+
       - name: Deploy to GCP
         run: |
+          scp -o StrictHostKeyChecking=no -i ssh-key.pem -r ./docker-compose.yml ./monitoring ${{ secrets.GCP_USERNAME }}@${{ secrets.GCP_STATIC_IP }}:~/
           ssh -o StrictHostKeyChecking=no -i ssh-key.pem ${{ secrets.GCP_USERNAME }}@${{ secrets.GCP_STATIC_IP }} "
-            echo 'Stopping existing container...' &&
-            sudo docker stop ${{ secrets.CONTAINER_NAME }}  || true && 
-            echo 'Removing existing container...' &&
-            sudo docker container rm -f ${{ secrets.CONTAINER_NAME }}  || true && 
-            echo 'Removing existing image...' &&
-            sudo docker image rm -f ${{ secrets.REGISTRY_USER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}  || true &&
-            echo 'Pulling new image...' &&
-            sudo docker pull ${{ secrets.REGISTRY_USER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }} && 
-            echo 'Running new container...' &&
-            sudo docker run --name ${{ secrets.CONTAINER_NAME }} --restart unless-stopped -d -p 80:8080 ${{ secrets.REGISTRY_USER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }} &&
+            echo 'Updating deployment...' &&
+            kubectl set image deployments/c3-frontend c3-frontend=docker.io/${{ secrets.REGISTRY_USER }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_TAG }}  || true && 
             echo 'Deployment complete.' &&
             exit"
