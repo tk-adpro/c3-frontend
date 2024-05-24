@@ -1,17 +1,10 @@
 package id.ac.ui.cs.advprog.eshop.c3frontend.controller;
 
 import id.ac.ui.cs.advprog.eshop.c3frontend.config.AuthUtils;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
-
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.util.WebUtils;
 
 @Controller
 @Log4j2
@@ -26,11 +19,15 @@ public class LoginController {
     }
 
     @GetMapping("/profile")
-    public String profilePage(){
+    public String profilePage(HttpServletRequest request){
         boolean isAdmin = AuthUtils.getRoles().contains("ROLE_ADMIN");
         log.info(AuthUtils.getRoles());
+        String referer = request.getHeader("Referer");
         if (isAdmin) {
-            return "redirect:/products";
+            if (referer != null && referer.contains("/requests/create")) {
+                return "redirect:/requests/create";
+            }
+            return "redirect:/requests";
         }
         return "profile";
     }
@@ -47,6 +44,4 @@ public class LoginController {
         }
         return "signup";
     }
-
-
 }

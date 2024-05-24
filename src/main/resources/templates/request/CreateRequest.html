@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Create Request</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#requestForm').on('submit', function(event) {
+        event.preventDefault();
+
+        var requestData = {
+          id: uuidv4(), // Generate UUID here
+          productName: $('#productName').val(),
+          imageUrl: $('#imageUrl').val(),
+          price: $('#price').val(),
+          storeUrl: $('#storeUrl').val(),
+          currency: $('#currency').val()
+        };
+
+        $.ajax({
+          type: "POST",
+          url: "/api/requests/create",
+          contentType: "application/json",
+          data: JSON.stringify(requestData),
+          success: function(response) {
+            alert('Request created successfully!');
+            window.location.href = '/requests';
+          },
+          error: function(error) {
+            alert('Failed to create request: ' + error.responseText);
+          }
+        });
+      });
+    });
+  </script>
+</head>
+<body>
+<h1>Create New Request</h1>
+<form id="requestForm">
+  <div>
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" name="productName" required>
+  </div>
+  <div>
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" id="imageUrl" name="imageUrl" required>
+  </div>
+  <div>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" required>
+  </div>
+  <div>
+    <label for="storeUrl">Store URL:</label>
+    <input type="text" id="storeUrl" name="storeUrl" required>
+  </div>
+  <div>
+    <label for="currency">Currency:</label>
+    <input type="text" id="currency" name="currency" required>
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+</body>
+</html>

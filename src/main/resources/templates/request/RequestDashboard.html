@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>This is Request Dashboard 🥵</title>
+  <style>
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px;
+      width: 200px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+<h1>HELLO WORLD THIS IS REQUEST DASHBOARD</h1>
+<p>Welcome to the request dashboard!</p>
+<button onclick="window.location.href='/requests/create'">Create New Request</button>
+
+<div th:each="request : ${requests}" class="card">
+  <h2 th:text="${request.productName}">Request Name</h2>
+  <img th:src="${request.imageUrl}" alt="Image">
+  <p>Price: <span th:text="${request.price}">$100</span></p>
+  <a th:href="${request.storeUrl}" target="_blank">View in Store</a>
+</div>
+
+<script>
+  console.log("Data for requests: [[${requests}]]"); // Logging
+</script>
+</body>
+</html>

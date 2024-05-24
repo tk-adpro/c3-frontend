@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
-
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -26,6 +25,8 @@ public class SecurityConfig {
                         .requestMatchers("/**/login").permitAll()
                         .requestMatchers("/**/signup").permitAll()
                         .requestMatchers("/**/public/**").permitAll()
+                        .requestMatchers("/requests/create").hasRole("ADMIN")  // Allow access to this endpoint
+                        .requestMatchers("/requests/").hasRole("ADMIN")
                         .requestMatchers("/**/admin/**").hasRole("ADMIN")
                         .requestMatchers("/**/customer/**").hasRole("CUSTOMER")
                         .requestMatchers("/**/user/**").hasRole("USER")
