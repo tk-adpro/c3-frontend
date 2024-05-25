@@ -3,41 +3,45 @@
 <head>
   <title>Create Request</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/uuid@latest/dist/umd/uuidv4.min.js"></script>
-  <script>
-    $(document).ready(function() {
-      $('#requestForm').on('submit', function(event) {
-        event.preventDefault();
+  <script th:inline="javascript">
+    const endpointUrl = 'http://34.101.35.243';
 
-        var requestData = {
-          id: uuidv4(), // Generate UUID here
-          productName: $('#productName').val(),
-          imageUrl: $('#imageUrl').val(),
-          price: $('#price').val(),
-          storeUrl: $('#storeUrl').val(),
-          currency: $('#currency').val()
-        };
+    function generateUUID() {
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+              (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+    }
 
-        $.ajax({
-          type: "POST",
-          url: "/api/requests/create",
-          contentType: "application/json",
-          data: JSON.stringify(requestData),
-          success: function(response) {
-            alert('Request created successfully!');
-            window.location.href = '/requests';
-          },
-          error: function(error) {
-            alert('Failed to create request: ' + error.responseText);
-          }
-        });
+    function submitRequest() {
+      var requestData = {
+        id: generateUUID(), // Generate UUID here
+        productName: $('#productName').val(),
+        imageUrl: $('#imageUrl').val(),
+        price: $('#price').val(),
+        storeUrl: $('#storeUrl').val(),
+        currency: $('#currency').val()
+      };
+
+      $.ajax({
+        url: endpointUrl + '/api/requests/create',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
+        success: function (response) {
+          alert('Request created successfully!');
+          window.location.href = '/requests';
+          console.log(response);
+        },
+        error: function (error) {
+          $('#responseMessage').html('<p class="text-red-600">Error creating request: ' + error.responseText + '</p>');
+        }
       });
-    });
+    }
   </script>
 </head>
 <body>
 <h1>Create New Request</h1>
-<form id="requestForm">
+<form id="requestForm" onsubmit="event.preventDefault(); submitRequest();">
   <div>
     <label for="productName">Product Name:</label>
     <input type="text" id="productName" name="productName" required>
@@ -61,6 +65,7 @@
   <div>
     <button type="submit">Submit</button>
   </div>
+  <div id="responseMessage"></div>
 </form>
 </body>
 </html>

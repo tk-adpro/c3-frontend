@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Request</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:inline="javascript">
+        const endpointUrl = 'http://34.101.35.243';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestId = urlParams.get('requestId');
+
+        $(document).ready(function() {
+            $.ajax({
+                url: endpointUrl + '/api/requests/' + requestId,
+                method: 'GET',
+                success: function(request) {
+                    $('#requestId').val(request.id);
+                    $('#productName').val(request.productName);
+                    $('#imageUrl').val(request.imageUrl);
+                    $('#price').val(request.price);
+                    $('#storeUrl').val(request.storeUrl);
+                    $('#currency').val(request.currency);
+                },
+                error: function() {
+                    $('#responseMessage').html('<p class="text-red-600">Error fetching request details.</p>');
+                }
+            });
+
+            $('#requestForm').on('submit', function(event) {
+                event.preventDefault();
+                submitRequest();
+            });
+        });
+
+        function submitRequest() {
+            var requestData = {
+                id: $('#requestId').val(),
+                productName: $('#productName').val(),
+                imageUrl: $('#imageUrl').val(),
+                price: $('#price').val(),
+                storeUrl: $('#storeUrl').val(),
+                currency: $('#currency').val()
+            };
+
+            $.ajax({
+                url: endpointUrl + '/api/requests/edit/' + requestId,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function(response) {
+                    window.location.href = '/requests?message=Request updated successfully!';
+                },
+                error: function() {
+                    $('#responseMessage').html('<p class="text-red-600">Error editing request.</p>');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>Edit Request</h1>
+<form id="requestForm">
+    <input type="hidden" id="requestId" name="requestId">
+    <div>
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required>
+    </div>
+    <div>
+        <label for="imageUrl">Image URL:</label>
+        <input type="text" id="imageUrl" name="imageUrl" required>
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" required>
+    </div>
+    <div>
+        <label for="storeUrl">Store URL:</label>
+        <input type="text" id="storeUrl" name="storeUrl" required>
+    </div>
+    <div>
+        <label for="currency">Currency:</label>
+        <input type="text" id="currency" name="currency" required>
+    </div>
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+    <div id="responseMessage"></div>
+</form>
+</body>
+</html>
