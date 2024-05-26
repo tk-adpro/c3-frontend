@@ -19,15 +19,11 @@ public class LoginController {
     }
 
     @GetMapping("/profile")
-    public String profilePage(HttpServletRequest request){
+    public String profilePage(){
         boolean isAdmin = AuthUtils.getRoles().contains("ROLE_ADMIN");
         log.info(AuthUtils.getRoles());
-        String referer = request.getHeader("Referer");
         if (isAdmin) {
-            if (referer != null && referer.contains("/requests/create")) {
-                return "redirect:/requests/create";
-            }
-            return "redirect:/requests";
+            return "redirect:/products";
         }
         return "profile";
     }
