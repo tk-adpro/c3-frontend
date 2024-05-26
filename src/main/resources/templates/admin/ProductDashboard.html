@@ -59,7 +59,7 @@
                         });
                         var randomColor = Math.floor(Math.random()*16777215).toString(16);
                         return `<div class="max-w-sm rounded overflow-hidden shadow-lg bg-white m-4">
-                                     <div class="w-82 h-40" style="background-color: #${randomColor};"></div>
+                                    <div class="w-82 h-40" style="background-color: #${randomColor};"></div>
                                     <div class="px-6 py-4">
                                         <div class="font-bold text-xl mb-2">${product.productName}</div>
                                         <p class="text-gray-700 text-base">
@@ -82,7 +82,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.log('AJAX call failed. Status:', status, 'Error:', error);
-                }
+                }   
             });
         }
 
