@@ -4,9 +4,21 @@
     <title>Voucher List</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .header-full-width .container {
+            width: 100%;
+            max-width: none;
+        }
+
+        header {
+            width: 100vw;
+            position: relative;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-200 flex flex-col items-center min-h-screen">
+<div th:replace="admin/Header.html :: Header" class="header-full-width"></div>
     <header class="flex items-center justify-center bg-white shadow w-full p-4 mb-6">
         <h1 class="text-3xl font-bold">Voucher Management</h1>
     </header>

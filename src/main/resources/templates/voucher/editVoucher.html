@@ -4,10 +4,21 @@
     <title>Edit Voucher</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .header-full-width .container {
+            width: 100%;
+            max-width: none;
+        }
+
+        header {
+            width: 100vw;
+            position: relative;
+        }
+    </style>
 </head>
+
 <body class="bg-gray-200 flex items-center justify-center min-h-screen">
 <div class="bg-white shadow-md rounded-lg p-8 max-w-lg w-full">
-    <h2 class="text-2xl font-bold mb-6 text-center">Edit Voucher</h2>
     <form id="editVoucherForm" class="space-y-4" onsubmit="submitVoucher(event)">
         <input type="hidden" id="voucherId" name="voucherId">
 
