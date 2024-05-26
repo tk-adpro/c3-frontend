@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Voucher List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body class="bg-gray-200 flex flex-col items-center min-h-screen">
+    <header class="flex items-center justify-center bg-white shadow w-full p-4 mb-6">
+        <h1 class="text-3xl font-bold">Voucher Management</h1>
+    </header>
+
+    <div id="details-modal" style="display: none" class="fixed inset-0 z-10 flex items-center justify-center ">
+        <div onclick="closeModal()" class="absolute w-screen h-screen bg-opacity-75 bg-gray-700"></div>
+        <div id="details-container" class="z-10 bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+            <h2 class="text-2xl font-bold mb-6 text-center">Voucher Details</h2>
+        </div>
+    </div>
+
+    <main class="w-full max-w-7xl mx-auto p-4">
+        <div id="responseMessage" class="mb-4 text-center"></div>
+        <div id="products" class="flex flex-wrap items-center justify-center"></div>
+    </main>
+
+    <script>
+        const endpointUrl = 'http://34.124.139.225';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+        if (message) {
+            $('#responseMessage').html('<p class="text-green-600">' + message + '</p>');
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for(let i = 0; i <ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        const authorization = getCookie("bearer")
+
+        $(document).ready(function() {
+
+            $.ajax({
+                url: endpointUrl + '/voucher-api/public/list',
+                headers: {
+                    "Authorization":"Bearer " + authorization,
+                },
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    data.forEach(function(voucher) {
+                        const voucherCard = `
+                            <div id="voucher-${voucher.voucherId}" class="cursor-pointer bg-white shadow-md rounded-lg p-4 m-2 w-64 transition-transform duration-300 ease-in-out transform hover:scale-105" onclick="fetchVoucherDetails('${voucher.voucherId}')">
+                                <h2 class="text-xl font-semibold">${voucher.voucherName}</h2>
+                                <p class="text-gray-700">${voucher.voucherDescription}</p>
+                                <p class="text-gray-900 font-bold">${voucher.voucherDiscount}%</p>
+                                <div class="flex flex-row justify-end mt-2 gap-2">
+                                    <button class="cursor-pointer bg-yellow-500 text-white px-2 py-1 rounded" onclick="editVoucher(event, '${voucher.voucherId}')">Edit</button>
+                                    <button class="cursor-pointer bg-red-500 text-white px-2 py-1 rounded" onclick="deleteVoucher(event, '${voucher.voucherId}')">Delete</button>
+                                </div>
+                            </div>
+                        `;
+                        $('#products').append(voucherCard);
+                    });
+
+                    $('#products').append(`
+                        <a href="/vouchers/create">
+                            <div class="bg-blue-500 shadow-md rounded-lg p-4 m-2 text-xl text-white font-bold transition-transform duration-300 ease-in-out transform hover:scale-105">
+                                +
+                            </div>
+                        </a>
+                    `);
+                },
+                error: function () {
+                    $('#responseMessage').html('<p class="text-red-600">Error fetching vouchers.</p>');
+                }
+            });
+        });
+
+        function fetchVoucherDetails(voucherId) {
+            $.ajax({
+                url: endpointUrl + '/voucher-api/public/get/' + voucherId,
+                headers: {
+                    "Authorization":"Bearer " + authorization,
+                },
+                method: 'GET',
+                success: function(voucher) {
+
+                    const container = $('#details-container');
+
+                    container.append(`
+                        <div class="detail-label font-bold">Voucher ID:</div>
+                        <div class="detail-value mb-2"> ${voucher.voucherId}</div>
+
+                        <div class="detail-label font-bold">Voucher Name:</div>
+                        <div class="detail-value mb-2">${voucher.voucherName}</div>
+
+                        <div class="detail-label font-bold">Voucher Description:</div>
+                        <div class="detail-value mb-2">${voucher.voucherDescription}</div>
+
+                        <div class="detail-label font-bold">Voucher Discount (%):</div>
+                        <div class="detail-value mb-2">${voucher.voucherDiscount}</div>
+
+                        <hr class="my-4">
+
+                        <div class="detail-label font-bold">Voucher Expiration Type:</div>
+                        <div class="detail-value mb-2">${voucher.voucherType}</div>
+
+                    `);
+
+                    if (voucher.voucherType === "Expired Date and Usage Limit") {
+                        container.append(`
+                            <div class="detail-label font-bold">Voucher Start Date:</div>
+                            <div class="detail-value mb-2">${voucher.voucherStartDate}</div>
+
+                            <div class="detail-label font-bold">Voucher End Date:</div>
+                            <div class="detail-value mb-2">${voucher.voucherEndDate}</div>
+
+                            <div class="detail-label font-bold">Voucher Usage Limit:</div>
+                            <div class="detail-value mb-2">${voucher.voucherUsageLimit}</div>
+                        `);
+                    }
+
+                    if (voucher.voucherType === "Expired Date") {
+                        container.append(`
+                            <div class="detail-label font-bold">Voucher Start Date:</div>
+                            <div class="detail-value mb-2">${voucher.voucherStartDate}</div>
+
+                            <div class="detail-label font-bold">Voucher End Date:</div>
+                            <div class="detail-value mb-2">${voucher.voucherEndDate}</div>
+                        `);
+                    }
+
+                    if (voucher.voucherType === "Usage Limit") {
+                        container.append(`
+                            <div class="detail-label font-bold">Voucher Usage Limit:</div>
+                            <div class="detail-value mb-2">${voucher.voucherUsageLimit}</div>
+                        `);
+                    }
+
+                    container.append(`
+                            <button onClick="closeModal()" id="close-modal-btn"
+                            class="mt-4 px-4 py-2 bg-red-500 text-white rounded">Close</button>
+                    `);
+
+                    $('#details-modal').css('display', 'flex');
+                },
+                error: function () {
+                    console.error('Error fetching voucher details.');
+                }
+            });
+        }
+
+        function deleteVoucher(event, voucherId) {
+            event.stopPropagation();
+            $.ajax({
+                url: endpointUrl + '/voucher-api/admin/delete/' + voucherId,
+                headers: {
+                    "Authorization":"Bearer " + authorization,
+                },
+                method: 'DELETE',
+                success: function () {
+                    $('#voucher-' + voucherId).remove();
+                    $('#responseMessage').html('<p class="text-green-600">Voucher deleted successfully!</p>');
+                },
+                error: function () {
+                    $('#responseMessage').html('<p class="text-red-600">Error deleting voucher.</p>');
+                }
+            });
+        }
+
+        function editVoucher(event, voucherId) {
+            event.stopPropagation();
+            window.location = '/vouchers/edit?id=' + voucherId;
+        }
+
+        function closeModal() {
+            $('#details-modal').css('display', 'none');
+            $('#details-container').empty();
+        }
+    </script>
+</body>
+</html>
