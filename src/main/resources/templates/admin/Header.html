@@ -6,11 +6,11 @@
 <body>
 <div th:fragment="header">
     <header class="bg-gray-800 text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-semibold"><a href="/" class="hover:text-gray-300">Welcome to Website</a></h1>
+        <div class="mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-semibold"><a href="/products" class="hover:text-gray-300">Welcome to Youkoso Store</a></h1>
             <nav>
-                <a href="/" class="text-white px-3 py-2 rounded hover:bg-gray-700 hover:text-white">Home</a>
-                <a href="/about" class="text-white px-3 py-2 rounded hover:bg-gray-700 hover:text-white">About</a>
+                <a href="/products" class="text-white px-3 py-2 rounded hover:bg-gray-700 hover:text-white">Home</a>
+                <a href="/vouchers" class="text-white px-3 py-2 rounded hover:bg-gray-700 hover:text-white">Manage Voucher</a>
                 <button id="logoutButton">Logout</button>
                 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                 <script th:src="@{/js/logout.js}"></script>
