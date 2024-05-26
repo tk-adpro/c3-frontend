@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payments</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+    <h1>Payments</h1>
+    <div>
+        <h2>Process Payment</h2>
+        <form id="paymentForm">
+            <label for="orderId">Order ID:</label>
+            <input type="text" id="orderId" name="orderId" required>
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
+            <label for="paymentMethod">Payment Method:</label>
+            <input type="text" id="paymentMethod" name="paymentMethod" required>
+            <label for="paymentDetails">Payment Details:</label>
+            <input type="text" id="paymentDetails" name="paymentDetails" required>
+            <button type="submit">Process Payment</button>
+        </form>
+    </div>
+    <script src="/js/payments.js"></script>
+</body>
+</html>
