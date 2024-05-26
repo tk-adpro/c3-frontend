@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Create Request</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      background-color: #007bff;
+      color: white;
+      padding: 20px;
+      width: 100%;
+      text-align: center;
+      margin: 0;
+    }
+    form {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      width: 300px;
+    }
+    form div {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #responseMessage {
+      margin-top: 15px;
+      font-size: 1.2em;
+      text-align: center;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script th:inline="javascript">
+    const endpointUrl = 'http://34.101.35.243';
+    //const endpointUrl = 'http://localhost:8080';
+
+    function generateUUID() {
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+              (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+    }
+
+    function submitRequest() {
+      var requestData = {
+        id: generateUUID(), // Generate UUID here
+        productName: $('#productName').val(),
+        imageUrl: $('#imageUrl').val(),
+        price: $('#price').val(),
+        storeUrl: $('#storeUrl').val(),
+        currency: $('#currency').val()
+      };
+
+      $.ajax({
+        url: endpointUrl + '/api/requests/create',
+        //url: endpointUrl + '/api-requests/public/create',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
+        success: function (response) {
+          alert('Request created successfully!');
+          window.location.href = '/requests';
+          console.log(response);
+        },
+        error: function (error) {
+          let errorMessage = error.responseText || 'Unknown error occurred';
+          $('#responseMessage').html('<p class="text-red-600">Error creating request: ' + errorMessage + '</p>');
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+<h1>Create New Request</h1>
+<form id="requestForm" onsubmit="event.preventDefault(); submitRequest();">
+  <div>
+    <label for="productName">Product Name:</label>
+    <input type="text" id="productName" name="productName" required>
+  </div>
+  <div>
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" id="imageUrl" name="imageUrl" required>
+  </div>
+  <div>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" required>
+  </div>
+  <div>
+    <label for="storeUrl">Store URL:</label>
+    <input type="text" id="storeUrl" name="storeUrl" required>
+  </div>
+  <div>
+    <label for="currency">Currency:</label>
+    <select id="currency" name="currency" required>
+      <option value="IDR">IDR</option>
+      <option value="JPY">JPY</option>
+      <option value="USD">USD</option>
+    </select>
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+  <div id="responseMessage"></div>
+</form>
+</body>
+</html>
