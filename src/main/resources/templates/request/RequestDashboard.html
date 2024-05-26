@@ -1,21 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>This is Request Dashboard 🥵</title>
+  <title>Request Import</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      background-color: #007bff;
+      color: white;
+      padding: 20px;
+      width: 100%;
+      text-align: center;
+      margin: 0;
+    }
+    p {
+      text-align: center;
+      font-size: 1.2em;
+      margin: 20px 0;
+    }
+    .button-create {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 20px;
+      font-size: 1em;
+      color: white;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .button-create:hover {
+      background-color: #0056b3;
+    }
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
     .card {
       border: 1px solid #ddd;
       border-radius: 5px;
-      padding: 10px;
+      padding: 20px;
       margin: 10px;
-      width: 200px;
-      display: inline-block;
-      vertical-align: top;
+      width: 250px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.05);
     }
     .card img {
       max-width: 100%;
       height: auto;
       border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .card h2 {
+      font-size: 1.5em;
+      margin: 10px 0;
+    }
+    .card p {
+      margin: 5px 0;
+    }
+    .card a {
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+    }
+    .card .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .card button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #f44336;
+      color: white;
+      transition: background-color 0.2s;
+    }
+    .card button:hover {
+      background-color: #e53935;
+    }
+    #responseMessage {
+      margin-top: 20px;
+      font-size: 1.2em;
     }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -39,7 +119,7 @@
                 <img src="${request.imageUrl}" alt="Image">
                 <p>Price: ${request.price}</p>
                 <a href="${request.storeUrl}" target="_blank">View in Store</a>
-                <div class="flex flex-row justify-end mt-2 gap-2">
+                <div class="button-container">
                   <button onclick="window.location.href='/requests/edit/${request.id}'">Edit</button>
                   <button class="delete-btn" data-id="${request.id}">Delete</button>
                 </div>
@@ -47,14 +127,6 @@
             `;
             $('#products').append(requestCard);
           });
-
-          $('#products').append(`
-            <a href="/requests/create">
-              <div class="bg-blue-500 shadow-md rounded-lg p-4 m-2 text-xl text-white font-bold transition-transform duration-300 ease-in-out transform hover:scale-105">
-                +
-              </div>
-            </a>
-          `);
 
           console.log('HTML after adding requests:', $('#products').html());
         },
@@ -84,11 +156,11 @@
   </script>
 </head>
 <body>
-<h1>HELLO WORLD THIS IS REQUEST DASHBOARD</h1>
-<p>Welcome to the request dashboard!</p>
-<button onclick="window.location.href='/requests/create'">Create New Request</button>
+<h1>REQUEST IMPORT DASHBOARD</h1>
+<p>Welcome to the request import dashboard!</p>
+<a href="/requests/create" class="button-create">Create New Request</a>
 
-<div id="products"></div>
+<div id="products" class="card-container"></div>
 <div id="responseMessage"></div>
 
 </body>
