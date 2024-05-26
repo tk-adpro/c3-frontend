@@ -65,6 +65,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script th:inline="javascript">
     const endpointUrl = 'http://34.101.35.243';
+    //const endpointUrl = 'http://localhost:8080';
 
     function generateUUID() {
       return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -84,6 +85,7 @@
 
       $.ajax({
         url: endpointUrl + '/api/requests/create',
+        //url: endpointUrl + '/api-requests/public/create',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(requestData),
@@ -93,7 +95,8 @@
           console.log(response);
         },
         error: function (error) {
-          $('#responseMessage').html('<p class="text-red-600">Error creating request: ' + error.responseText + '</p>');
+          let errorMessage = error.responseText || 'Unknown error occurred';
+          $('#responseMessage').html('<p class="text-red-600">Error creating request: ' + errorMessage + '</p>');
         }
       });
     }

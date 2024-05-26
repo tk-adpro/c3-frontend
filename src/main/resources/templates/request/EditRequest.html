@@ -65,6 +65,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:inline="javascript">
         const endpointUrl = 'http://34.101.35.243';
+        //const endpointUrl = 'http://localhost:8080';
 
         const urlParams = new URLSearchParams(window.location.search);
         const requestId = /*[[${requestId}]]*/ '';
@@ -73,6 +74,7 @@
         $(document).ready(function() {
             $.ajax({
                 url: endpointUrl + '/api/requests/' + requestId,
+                //url: endpointUrl + '/api/requests/public/' + requestId,
                 method: 'GET',
                 success: function(request) {
                     $('#requestId').val(request.id);
@@ -105,6 +107,7 @@
 
             $.ajax({
                 url: endpointUrl + '/api/requests/edit/' + requestId,
+                //url: endpointUrl + '/api/requests/public/edit/' + requestId,
                 type: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
