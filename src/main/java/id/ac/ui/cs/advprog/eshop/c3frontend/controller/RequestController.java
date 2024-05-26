@@ -12,19 +12,11 @@ import java.util.UUID;
 
 @Controller
 public class RequestController {
-
-    private final RestTemplate restTemplate;
-    private final String backendUrl;
-
-    public RequestController(RestTemplate restTemplate, @Value("${backend.url}") String backendUrl) {
-        this.restTemplate = restTemplate;
-        this.backendUrl = backendUrl;
-    }
-
     @GetMapping("/requests")
-    public String requestDashboard(Model model) {
-        List<Map<String, Object>> requests = restTemplate.getForObject(backendUrl + "/api/requests", List.class);
-        model.addAttribute("requests", requests);
+    public String requestDashboard() {
+//        List<Map<String, Object>> requests = restTemplate.getForObject(backendUrl + "/api/requests", List.class);
+//        System.out.println("Requests received: " + requests); // Logging
+//        model.addAttribute("requests", requests);
         return "request/requestDashboard";
     }
 
