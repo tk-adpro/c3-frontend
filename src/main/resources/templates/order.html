@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Orders</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+    <h1>Orders</h1>
+    <div>
+        <h2>Create Order</h2>
+        <form id="orderForm">
+            <label for="customerName">Customer Name:</label>
+            <input type="text" id="customerName" name="customerName" required>
+            <div id="itemsContainer">
+                <label>Items:</label>
+                <div>
+                    <input type="text" name="productId" placeholder="Product ID" required>
+                    <input type="number" name="quantity" placeholder="Quantity" required>
+                </div>
+            </div>
+            <button type="button" onclick="addItem()">Add Item</button>
+            <button type="submit">Create Order</button>
+        </form>
+    </div>
+    <div>
+        <h2>Order List</h2>
+        <ul id="orderList"></ul>
+    </div>
+    <script src="/js/orders.js"></script>
+</body>
+</html>
