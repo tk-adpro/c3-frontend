@@ -6,9 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 public class RequestController {
@@ -20,13 +22,6 @@ public class RequestController {
         this.restTemplate = restTemplate;
         this.backendUrl = backendUrl;
     }
-
-//    @GetMapping("/requests")
-//    public String requestDashboard(Model model) {
-//        List<Map<String, Object>> requests = restTemplate.getForObject(backendUrl + "/api/requests", List.class);
-//        model.addAttribute("requests", requests);
-//        return "request/requestDashboard";
-//    }
 
     @GetMapping("/requests")
     public String requestDashboard(Model model) {
@@ -49,7 +44,7 @@ public class RequestController {
     }
 
     @GetMapping("/requests/edit/{requestId}")
-    public String editRequest(@PathVariable Long requestId, Model model) {
+    public String editRequest(@PathVariable UUID requestId, Model model) {
         model.addAttribute("requestId", requestId);
         return "request/editRequest";
     }

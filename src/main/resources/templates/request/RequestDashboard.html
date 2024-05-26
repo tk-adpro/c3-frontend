@@ -23,11 +23,15 @@
     const endpointUrl = 'http://34.101.35.243';
 
     $(document).ready(function() {
+      console.log('Document is ready');
+
       $.ajax({
         url: endpointUrl + '/api/requests',
         method: 'GET',
         dataType: 'json',
         success: function(data) {
+          console.log('Fetched requests:', data);
+
           data.forEach(function(request) {
             const requestCard = `
               <div id="request-${request.id}" class="card">
@@ -36,7 +40,7 @@
                 <p>Price: ${request.price}</p>
                 <a href="${request.storeUrl}" target="_blank">View in Store</a>
                 <div class="flex flex-row justify-end mt-2 gap-2">
-                  <button class="edit-btn" data-id="${request.id}">Edit</button>
+                  <button onclick="window.location.href='/requests/edit/${request.id}'">Edit</button>
                   <button class="delete-btn" data-id="${request.id}">Delete</button>
                 </div>
               </div>
@@ -51,20 +55,19 @@
               </div>
             </a>
           `);
+
+          console.log('HTML after adding requests:', $('#products').html());
         },
         error: function () {
           $('#responseMessage').html('<p class="text-red-600">Error fetching requests.</p>');
         }
       });
 
-      $(document).on('click', '.edit-btn', function() {
-        const requestId = $(this).data('id');
-        window.location.href = '/requests/edit?requestId=' + requestId;
-      });
-
       $(document).on('click', '.delete-btn', function(event) {
         event.stopPropagation();
         const requestId = $(this).data('id');
+        console.log('Delete button clicked for request ID:', requestId);
+
         $.ajax({
           url: endpointUrl + '/api/requests/delete/' + requestId,
           type: 'DELETE',
