@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shipping Notifications</title>
+    <script src="https://cdn.jsdelivr.net/sockjs/1.1.2/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+<h1>Shipping Notifications</h1>
+<div id="shippingNotification"></div>
+
+<script>
+    var socket = new SockJS('http://34.87.143.187/ws'); // Ensure this matches your WebSocket endpoint
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        // Replace 'userId' with the actual user ID
+        var userId = '2';
+
+        stompClient.subscribe('/topic/shipping/' + userId, function (shipping) {
+            var notification = JSON.parse(shipping.body);
+            document.getElementById('shippingNotification').innerHTML =
+                'New Shipping Created: ' + notification.status;
+        });
+    });
+</script>
+</body>
+</html>

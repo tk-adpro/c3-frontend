@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Verify Payments</title>
+</head>
+<body>
+<h1>Verify Payments</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Payment ID</th>
+        <th>Order ID</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="payment : ${payments}">
+        <td th:text="${payment[0]}"></td>
+        <td th:text="${payment[2]}"></td>
+        <td th:text="${payment[6]}"></td>
+        <td>
+            <button th:attr="onclick='verifyPayment(' + ${payment[0]} + ', true)'">VALID</button>
+            <button th:attr="onclick='verifyPayment(' + ${payment[0]} + ', false)'">NOT VALID</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function verifyPayment(paymentId, verified) {
+        const token = getCookie("bearer");
+        fetch('http://34.87.143.187/shipping/admin/verify-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+                paymentId: paymentId,
+                verified: verified
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                location.reload(); // Reload the page to reflect changes
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>
