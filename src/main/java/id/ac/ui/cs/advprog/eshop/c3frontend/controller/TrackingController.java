@@ -17,11 +17,20 @@ public class TrackingController {
     private String trackingUrl = "http://34.87.143.187";
 
     @GetMapping("admin/verify-payments")
-    public String homePage(Model model) {
+    public String verifyPaymentPage(Model model) {
         String url = trackingUrl+"/shipping/admin/get-unverified-payments";
         List<List<Object>> payments = restTemplate.getForObject(url, List.class);
         model.addAttribute("payments", payments);
         return "admin/VerifyPayments";
+    }
+
+
+    @GetMapping("admin/get-orders-in-progress")
+    public String inProgressOrderPage(Model model){
+        String url = trackingUrl+"/shipping/admin/get-orders-in-progress";
+        List<List<Object>> orders = restTemplate.getForObject(url, List.class);
+        model.addAttribute("payments", orders);
+        return "admin/OrdersInProgress";
     }
 
     @GetMapping("/public/client")

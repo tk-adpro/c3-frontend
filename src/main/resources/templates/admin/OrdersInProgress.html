@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>In Progress Orders</title>
+</head>
+<body>
+<h1>In Progress Orders</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>Customer ID</th>
+        <th>Order Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order[0]}"></td>
+        <td th:text="${order[1]}"></td>
+        <td th:text="${order[2]}"></td>
+        <td th:text="${order[3]}"></td>
+        <td>
+            <button th:attr="onclick='goToShippingPage(' + ${order[0]} + ')'">Go to Shipping</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    function goToShippingPage(orderId) {
+        window.location.href = '/admin/shipping?orderId=' + orderId;
+    }
+</script>
+</body>
+</html>
