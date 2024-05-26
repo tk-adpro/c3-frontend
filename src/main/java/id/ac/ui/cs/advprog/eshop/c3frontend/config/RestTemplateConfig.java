@@ -12,17 +12,17 @@ import java.util.Collections;
 @Configuration
 public class RestTemplateConfig {
 
-//    @Bean
-//    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-//        return builder.build();
-//    }
-
     @Bean
-    public RestTemplate restTemplate(ObjectMapper objectMapper) {
-        RestTemplate restTemplate = new RestTemplate();
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(objectMapper);
-        restTemplate.setMessageConverters(Collections.singletonList(converter));
-        return restTemplate;
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
     }
+
+//    @Bean
+//    public RestTemplate restTemplate(ObjectMapper objectMapper) {
+//        RestTemplate restTemplate = new RestTemplate();
+//        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+//        converter.setObjectMapper(objectMapper);
+//        restTemplate.setMessageConverters(Collections.singletonList(converter));
+//        return restTemplate;
+//    }
 }
